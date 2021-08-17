@@ -1,0 +1,38 @@
+.pl-tbl-div {
+    height: calc(100vh - 80px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .card {
+        width: 100%;
+        .table {
+            tr {
+                font-size: 14px;
+            }
+            .empty-td {
+                text-align: center;
+            }
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .title {
+                font-size: 14px;
+                font-weight: 700;
+            }
+            .srch-cntnr {
+                width: 30%;
+            }
+        }
+        .card-body {
+            height: 400px;
+            overflow: auto;
+        }
+        .ldng {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
