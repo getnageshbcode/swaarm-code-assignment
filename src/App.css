@@ -1,3 +1,17 @@
 .App {
   text-align: center;
+  background-color: #F7F8FA;
+  font-family: Roboto, sans-serif;
+}
+.top-menu {
+  height: 50px;
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+  line-height: 50px;
+}
+.sidenav {
+  border-right: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
