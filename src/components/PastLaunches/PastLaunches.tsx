@@ -1,9 +1,12 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { useQuery } from "@apollo/client";
 import { getPastLaunchesList } from "../../queries/query";
-import { Card, CardHeader, CardBody, Input } from "reactstrap";
+import { Card, CardHeader, CardBody, Input, Button } from "reactstrap";
 import './style.scss';
 import PastLaunchesTable from '../PastLaunchesTable';
+import ModalExample from '../RenderModal';
+import { ILaunchType } from '../PastLaunchesTable/PastLaunchesTable';
+import RenderCompareData from '../RenderCompareData';
 
 const PastLaunches = () => {
     const limit = 10;
@@ -11,6 +14,9 @@ const PastLaunches = () => {
     const [hasNextPage, setHasNextPage] = useState(true);
     const observer = useRef<IntersectionObserver>();
     const searchKeyTimer = useRef<ReturnType<typeof setTimeout>>();
+    const [selectedRows, setSelectedRows] = useState<string[]>([]);
+    const [showCompareModal, setShowCompareModal] = useState(false);
+    const [modalBody, setModalBody] = useState<string | JSX.Element>("")
     let offsetRef = useRef<number>(0);
     const { loading, error, data, fetchMore } = useQuery(getPastLaunchesList, {
         variables: {
@@ -77,6 +83,17 @@ const PastLaunches = () => {
         [searchKey, offsetRef, fetchMore],
     )
 
+    const onRowSelect = (id: string) => {
+        let lSelectedRows: string[] = [...selectedRows];
+        const idIndex = lSelectedRows.indexOf(id);
+        if (idIndex !== -1) {
+            lSelectedRows.splice(idIndex, 1);
+        } else {
+            lSelectedRows = [...lSelectedRows, id]
+        }
+        setSelectedRows(lSelectedRows);
+    }
+
     if (error) return <p>Error</p>;
 
     const onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -88,6 +105,15 @@ const PastLaunches = () => {
             1000
         );
     };
+
+    const onCompareClick = () => {
+        const filteredArr = data.launchesPast.filter((arr: ILaunchType) => {
+            return selectedRows.indexOf(arr.id) !== -1
+        });
+        const modalBody = <RenderCompareData data={filteredArr}/>
+        setModalBody(modalBody)
+        setShowCompareModal(true);
+    }
 
     return (
         <div className="pl-tbl-div">
@@ -112,11 +138,34 @@ const PastLaunches = () => {
                             <PastLaunchesTable
                                 lastLaunchRef={lastLaunchRef}
                                 launchesPast={data?.launchesPast ? data?.launchesPast : []}
+                                selectedRows={selectedRows}
+                                onRowSelect={onRowSelect}
                             />
                         </CardBody>
                     </>
                 }
             </Card>
+            {selectedRows.length === 2 && <div>
+                <Button
+                    onClick={onCompareClick}
+                    className="comp-btn"
+                    color="primary"
+                    size="lg"
+                >
+                    Compare
+                </Button>
+            </div>}
+
+            <ModalExample 
+                modalBody={modalBody} 
+                isOpen={showCompareModal} 
+                onHide={() => setShowCompareModal(false)}
+                modalFooter={
+                    <div> <Button onClick={() => setShowCompareModal(false)}>Close</Button></div>
+                }
+                modalTitle="Past launches comparison"
+                className='compare-modal'
+            />
         </div>
     )
 }
