@@ -3,6 +3,7 @@ import { gql } from "@apollo/client";
 export const getPastLaunchesList = gql`
     query($limit: Int!, $offset: Int!, $searchKey: String) {
         launchesPast(limit:$limit, offset:$offset, find:{mission_name:$searchKey}) {
+            id
             mission_name
             launch_date_local
             launch_site {
@@ -20,6 +21,8 @@ export const getPastLaunchesList = gql`
               home_port
               image
             }
+            launch_success
+            launch_year
         }
     }
 `
