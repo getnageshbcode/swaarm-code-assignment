@@ -7,6 +7,10 @@
         width: 100%;
         .table {
             tr {
+                th {
+                    border-bottom-width: 1px;
+                    border-bottom-color: inherit !important;
+                }
                 font-size: 14px;
             }
             .empty-td {
@@ -35,4 +39,14 @@
             align-items: center;
         }
     }
+    .comp-btn {
+        position: fixed;
+        bottom: 0px;
+        right: 20px;
+    }
+
+}
+.compare-modal {
+    max-width: 80%;
+    width: fit-content;
 }
